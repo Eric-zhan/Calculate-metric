@@ -1,0 +1,11 @@
+def calculate_confusion_matrix(gt_img, pred_img, n_class):
+    """如果np.vstack里是（gt，pred），那么最后混淆矩阵里，
+        横坐标是gt，纵坐标是pred，eg. (0, 1) 0是gt，1是pred
+        所以FN是confusion_matrix[index, :] - TP
+        FP 是confusion_matrix[:, index] - TP"""
+    replace_matrix = np.vstack((gt_img.flatten(), pred_img.flatten())).T
+    confusion_matrix, _ = np.histogramdd(replace_matrix,
+                                         bins=(n_class, n_class),
+                                         range=[(0, n_class), (0, n_class)])
+    confusion_matrix = confusion_matrix.astype(np.uint32)
+    return confusion_matrix
